@@ -34,59 +34,70 @@ public:
 template <typename T>
 class Queue
 {
+protected:
+	int Capacity;
+	int CurrentSize;
+	T* Database;
+
 public:
-	Queue() {};
-	virtual ~Queue() {};
-
-	T Database[10];
-
-	int Cursor1 = -1;
-	int Cursor2 = 0;
-
-	void PushBack(T A)
+	Queue(int NewCapacity = 10)
 	{
-		Database[++Cursor1] = A;
+		Capacity = NewCapacity;
+		Database = new T[Capacity];
+		CurrentSize = 0;
+	};
+	
+	virtual ~Queue()
+	{
+		delete[] Database;
+		Database = nullptr;
+	};
+
+	bool queue(T A)
+	{
+		if (CurrentSize > Capacity)
+		{
+			return false;
+		}
+
+		Database[CurrentSize++] = A;
+	
+		return true;
 	}
 
-	/*void Pop()
+	T deque()
 	{
-		Cursor2++;
-	}*/
+		if (CurrentSize < 0)
+		{
+			return -1;
+		}
+		T Target = Database[0];
 
-	T Deque()
-	{
-		return Database[Cursor2++];
+		for (int i = 0; i < CurrentSize - 1; i++)
+		{
+			Database[i] = Database[i + 1];
+		}
+		CurrentSize--;
+
+		return Target;
 	}
+
+	int GetSize() { return CurrentSize; }
 };
 
 int main()
 {
-	//Stack<int> IntStack;
-	//IntStack.Push(10);
-	//IntStack.Push(30);
-	//IntStack.Push(22);
-	//IntStack.Push(37);
-
-	//cout << IntStack.Top() << endl;
-	//cout << IntStack.Top() << endl;
-	//cout << IntStack.Top() << endl;
-
-	//stack<float> floatstack;
-	//floatstack.push(30.732);
-	//cout << floatstack.top() << endl;
-	//floatstack.pop();
-	//cout << floatstack.size() << endl;
-
 	Queue<int> IntQueue;
-	IntQueue.PushBack(10);
-	IntQueue.PushBack(20);
-	IntQueue.PushBack(30);
-	IntQueue.PushBack(50);
 
-	cout << IntQueue.Deque() << endl;
-	cout << IntQueue.Deque() << endl;
-	cout << IntQueue.Deque() << endl;
-	cout << IntQueue.Deque() << endl;
+	for (int i = 1; i <= 10; ++i)
+	{
+		IntQueue.queue(i);
+	}
+
+	for (int i = 1; i <= 10; ++i)
+	{
+		cout << IntQueue.deque() << endl;
+	}
 
 	return 0;
 }
