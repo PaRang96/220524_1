@@ -35,66 +35,82 @@ template <typename T>
 class Queue
 {
 protected:
-	int Capacity;
-	int CurrentSize;
 	T* Database;
+	int Capacity;
+	int Size;
+	int Front;
+	int Back;
 
 public:
 	Queue(int NewCapacity = 10)
 	{
 		Capacity = NewCapacity;
 		Database = new T[Capacity];
-		CurrentSize = 0;
+		Size = 0;
+		Front = 0;
+		Back = 0;
 	};
 	
 	virtual ~Queue()
 	{
 		delete[] Database;
-		Database = nullptr;
 	};
 
 	bool queue(T A)
 	{
-		if (CurrentSize > Capacity)
+		if (Size > Capacity)
 		{
 			return false;
 		}
 
-		Database[CurrentSize++] = A;
-	
+		Database[Back++] = A;
+
+		Back = Back % Capacity;
+		Size++;
+
 		return true;
 	}
 
 	T deque()
 	{
-		if (CurrentSize < 0)
+		if (Size < 0)
 		{
 			return -1;
 		}
-		T Target = Database[0];
+		T Target = Database[Front++];
 
-		for (int i = 0; i < CurrentSize - 1; i++)
-		{
-			Database[i] = Database[i + 1];
-		}
-		CurrentSize--;
+		Front = Front % Capacity;
+		Size--;
 
 		return Target;
 	}
 
-	int GetSize() { return CurrentSize; }
+	// accessor
+	int GetSize() { return Size; }
+	int GetCapacity() { return Capacity; }
+
+};
+
+template <typename T>
+class ChildQueue : public Queue<T>
+{
+public:
+	void Clear()
+	{
+		Queue::Size = 0;
+	}
 };
 
 int main()
 {
-	Queue<int> IntQueue;
+	Queue<int> IntQueue(10000);
 
-	for (int i = 1; i <= 10; ++i)
+	for (int i = 0; i < IntQueue.GetCapacity(); ++i)
 	{
 		IntQueue.queue(i);
 	}
 
-	for (int i = 1; i <= 10; ++i)
+	for (int i = 0; i < IntQueue.GetCapacity(); ++i)
 	{
 		cout << IntQueue.deque() << endl;
 	}
