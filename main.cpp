@@ -48,14 +48,14 @@ public:
 		Database[++Cursor1] = A;
 	}
 
-	void Pop()
+	/*void Pop()
 	{
 		Cursor2++;
-	}
+	}*/
 
 	T Deque()
 	{
-		return Database[Cursor2];
+		return Database[Cursor2++];
 	}
 };
 
@@ -84,11 +84,8 @@ int main()
 	IntQueue.PushBack(50);
 
 	cout << IntQueue.Deque() << endl;
-	IntQueue.Pop();
 	cout << IntQueue.Deque() << endl;
-	IntQueue.Pop();
 	cout << IntQueue.Deque() << endl;
-	IntQueue.Pop();
 	cout << IntQueue.Deque() << endl;
 
 	return 0;
